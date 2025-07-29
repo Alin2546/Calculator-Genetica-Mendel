@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <title>Calculator Legile lui Mendel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 0 20px 40px;
+            background: #f9fbfd;
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #34495e;
+        }
+        .section {
+            background: #fff;
+            padding: 22px 28px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgb(0 0 0 / 0.07);
+            margin-bottom: 30px;
+        }
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px 24px;
+            align-items: center;
+        }
+        form h2 {
+            grid-column: 1 / -1;
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #2a3f54;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3a4a63;
+            justify-self: end;
+            white-space: nowrap;
+        }
+        input[type="text"] {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border: 1.7px solid #cbd2d9;
+            border-radius: 6px;
+            transition: border-color 0.25s;
+            max-width: 160px;
+            width: 100%;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.35);
+        }
+        button {
+            grid-column: 1 / -1;
+            max-width: 240px;
+            justify-self: center;
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            font-weight: 700;
+            border-radius: 7px;
+            padding: 14px 0;
+            cursor: pointer;
+            font-size: 1.15rem;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+
+        /* Rezultate */
+        .results-section h2 {
+            margin-bottom: 24px;
+            color: #2a3f54;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+        .results-section h3 {
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #34495e;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 4px;
+        }
+        p, ul {
+            margin-top: 6px;
+            margin-bottom: 18px;
+            color: #4a5a72;
+            font-size: 0.95rem;
+        }
+        ul {
+            list-style: inside disc;
+            padding-left: 18px;
+        }
+        /* Genotipuri părinți cu × */
+        .parents-genotype {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #34495e;
+        }
+        .parents-genotype span {
+            background: #e4f0fb;
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1.5px solid #4a90e2;
+            margin: 0 6px;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+        .parents-genotype .cross {
+            font-size: 1.4rem;
+            color: #2980b9;
+            user-select: none;
+        }
+
+        /* Tabele */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            color: #2a3f54;
+        }
+        th, td {
+            border: 1px solid #cbd2d9;
+            padding: 10px 14px;
+            text-align: center;
+        }
+        th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: 700;
+            user-select: none;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f5f9fe;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            label {
+                justify-self: start;
+                white-space: normal;
+                margin-bottom: 4px;
+            }
+            input[type="text"] {
+                max-width: 100%;
+            }
+            button {
+                max-width: 100%;
+            }
+            .parents-genotype span {
+                min-width: auto;
+                padding: 8px 12px;
+                margin: 6px 3px 6px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Calculator Legile lui Mendel</h1>
+
+<div class="section">
+    <h2>1. Definirea genelor și caracterelor</h2>
+    <form method="post" th:action="@{/define-genes}" style="max-width: 900px; display: grid; grid-template-columns: 1fr; gap: 18px;">
+
+        <h3>Caracter 1</h3>
+
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <label for="dominant1" style="white-space: nowrap; width: 150px;">Alela dominantă (ex: M)</label>
+            <input type="text" id="dominant1" name="dominant1" maxlength="1" required style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+            <label for="dominant1Desc" style="white-space: nowrap; width: 180px; margin-left: 30px;">Descriere (ex: mare)</label>
+            <input type="text" id="dominant1Desc" name="dominant1Desc" required style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+        </div>
+
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <label for="recessive1" style="white-space: nowrap; width: 150px;">Alela recesivă (ex: m)</label>
+            <input type="text" id="recessive1" name="recessive1" maxlength="1" required style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+            <label for="recessive1Desc" style="white-space: nowrap; width: 180px; margin-left: 30px;">Descriere (ex: mic)</label>
+            <input type="text" id="recessive1Desc" name="recessive1Desc" required style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+        </div>
+
+        <h3 style="margin-top: 30px;">Caracter 2 (opțional)</h3>
+
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <label for="dominant2" style="white-space: nowrap; width: 150px;">Alela dominantă (ex: R)</label>
+            <input type="text" id="dominant2" name="dominant2" maxlength="1" style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+            <label for="dominant2Desc" style="white-space: nowrap; width: 180px; margin-left: 30px;">Descriere (ex: galben)</label>
+            <input type="text" id="dominant2Desc" name="dominant2Desc" style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+        </div>
+
+
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <label for="recessive2" style="white-space: nowrap; width: 150px;">Alela recesivă (ex: r)</label>
+            <input type="text" id="recessive2" name="recessive2" maxlength="1" style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+            <label for="recessive2Desc" style="white-space: nowrap; width: 180px; margin-left: 30px;">Descriere (ex: roșu)</label>
+            <input type="text" id="recessive2Desc" name="recessive2Desc" style="flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1.7px solid #cbd2d9;" />
+        </div>
+
+        <button type="submit" style="max-width: 220px; justify-self: center; margin-top: 20px;">Salvează genele</button>
+    </form>
+</div>
+<div class="section" th:if="${genesDefined}">
+    <h3>Gene salvate</h3>
+    <ul>
+        <li th:if="${dominant1}" th:text="'Alela dominantă 1: ' + ${dominant1} + ' (' + ${dominant1Desc} + ')'"></li>
+        <li th:if="${recessive1}" th:text="'Alela recesivă 1: ' + ${recessive1} + ' (' + ${recessive1Desc} + ')'"></li>
+        <li th:if="${dominant2}" th:text="'Alela dominantă 2: ' + ${dominant2} + ' (' + ${dominant2Desc} + ')'"></li>
+        <li th:if="${recessive2}" th:text="'Alela recesivă 2: ' + ${recessive2} + ' (' + ${recessive2Desc} + ')'"></li>
+    </ul>
+</div>
+<div th:if="${error}" style="color: red; font-weight: bold; margin-bottom: 20px;">
+    <p th:text="${error}"></p>
+</div>
+<div class="section" th:if="${genesDefined}">
+    <h2>2. Introdu genotipurile părinților (F₀)</h2>
+    <form method="post" th:action="@{/define-parents}" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column;">
+            <label for="parent1">Părinte 1:</label>
+            <input type="text" id="parent1" name="parent1" placeholder="Ex: Aavv" maxlength="10" required />
+        </div>
+
+        <div style="font-size: 3.3rem; font-weight: 700; color: #3498db; user-select: none; margin: 0 10px;">
+            ×
+        </div>
+
+        <div style="display: flex; flex-direction: column;">
+            <label for="parent2">Părinte 2:</label>
+            <input type="text" id="parent2" name="parent2" placeholder="Ex: VVaa" maxlength="10" required />
+        </div>
+
+        <button type="submit" style="flex-basis: 100%; max-width: 200px; margin-top: 15px;">Generează F₁</button>
+    </form>
+</div>
+
+
+<div class="section results-section" th:if="${parentsDefined}">
+    <h2>Rezultate pentru problema curentă</h2>
+
+    <div class="parents-genotype">
+        <span th:text="${parent1}"></span>
+        <span class="cross">×</span>
+        <span th:text="${parent2}"></span>
+    </div>
+
+    <h3>Gameții părinților (F₀)</h3>
+    <p><strong>Părinte 1:</strong></p>
+    <ul>
+        <li th:each="g : ${gametes1}" th:text="${g}"></li>
+    </ul>
+    <p><strong>Părinte 2:</strong></p>
+    <ul>
+        <li th:each="g : ${gametes2}" th:text="${g}"></li>
+    </ul>
+
+    <h3>Tabel Punnett F₁ (genotipuri)</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Gameți Părinte 1 \ Părinte 2</th>
+            <th th:each="g : ${gametes2}" th:text="${g}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="g1, iterStat1 : ${gametes1}">
+            <th th:text="${g1}"></th>
+            <td th:each="g2, iterStat2 : ${gametes2}"
+                th:text="${resultsF1[iterStat1.index][iterStat2.index]}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Fenotipuri F₁ și procente</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Genotip</th>
+            <th>Fenotip</th>
+            <th>Procent</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${phenotypesF1}">
+            <td th:text="${row.genotype}"></td>
+            <td th:text="${row.phenotype}"></td>
+            <td th:text="${row.percentage} + '%'"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Gameții F₁</h3>
+    <ul>
+        <li th:each="g : ${gametesF1}" th:text="${g}"></li>
+    </ul>
+
+    <h3>Tabel Punnett F₂ (genotipuri)</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Gameți F₁ \ Gameți F₁</th>
+            <th th:each="g : ${gametesF1}" th:text="${g}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="g1, rowStat : ${gametesF1}">
+            <th th:text="${g1}"></th>
+            <td th:each="g2, colStat : ${gametesF1}" th:text="${resultsF2[rowStat.index][colStat.index]}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Fenotipuri F₂ și procente</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Genotip</th>
+            <th>Fenotip</th>
+            <th>Procent</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${phenotypesF2}">
+            <td th:text="${row.genotype}"></td>
+            <td th:text="${row.phenotype}"></td>
+            <td th:text="${row.percentage} + '%'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
