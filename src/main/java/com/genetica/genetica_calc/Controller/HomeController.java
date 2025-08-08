@@ -6,8 +6,54 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping
-    public String home() {
-        return "home";
+    @GetMapping()
+    public String calculator() {
+        return "calculator";
     }
+
+    @GetMapping("/theory")
+    public String theory() {
+        return "theory";
+    }
+
+    @GetMapping("/segregation-law")
+    public String segregationLaw() {
+        return "segregation";
+    }
+
+    @GetMapping("/independent-assortment")
+    public String independentAssortment() {
+        return "independentAssortment";
+    }
+
+    @GetMapping("/bac-exercises")
+    public String bacExercises() {
+        return "bacExercises";
+    }
+
+    @GetMapping("/learning-environment")
+    public String learningEnvironment() {
+        return "learningEnvironment";
+    }
+
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact";
+    }
+
+    @GetMapping("/faq")
+    public String faq() {
+        return "faq";
+    }
+
+    @GetMapping("/terms")
+    public String termsAndConditions() {
+        return "termsAndConditions";
+    }
+
+    @GetMapping("/donate")
+    public String donate() {
+        return "donate";
+    }
+
 }

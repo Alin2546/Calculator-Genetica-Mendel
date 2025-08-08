@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <title>Start Chestionare Genetică</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4ff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #3f51b5;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+        }
+        header p {
+            margin: 8px 0 0;
+            font-size: 1.1rem;
+            opacity: 0.85;
+        }
+        main {
+            max-width: 900px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(63,81,181,0.15);
+            padding: 25px 20px;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(63,81,181,0.25);
+        }
+        .card h2 {
+            margin: 0 0 10px;
+            color: #3f51b5;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        .card p {
+            margin: 0;
+            color: #555;
+            font-size: 1rem;
+        }
+        #randomBtn {
+            display: block;
+            max-width: 300px;
+            margin: 40px auto 0;
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 15px 0;
+            border-radius: 30px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255,87,34,0.3);
+            text-align: center;
+        }
+        #randomBtn:hover {
+            background: #e64a19;
+            box-shadow: 0 6px 14px rgba(230,74,25,0.5);
+        }
+        /* Header fixat sus */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  background-color: #d1e4ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  z-index: 1200;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Buton toggle meniu */
+#menu-toggle {
+  background-color: transparent;
+  border: none;
+  color: #004aad;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+#menu-toggle:hover {
+  background-color: #a8c3ff;
+}
+
+/* Text header (pași / titlu) */
+.header-text {
+  padding: 0 1rem;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  color: #004aad;
+  font-weight: 900;
+  font-size: 1.4rem;
+  user-select: none;
+  align-items: center;
+}
+
+/* Titlu aplicație în header */
+.app-title {
+  margin-left: auto;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #007bff, #7c3aed, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Sidebar - partea laterală */
+.sidebar {
+  width: 250px;
+  background-color: #004aad;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  height: calc(100vh - 56px);
+  transform: translateX(-100%);
+  z-index: 1002;
+}
+
+/* Sidebar vizibil */
+.sidebar.show {
+  transform: translateX(0);
+}
+
+/* Header sidebar */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.sidebar-header h2 {
+  font-size: 1.5rem;
+}
+
+/* Buton închide sidebar */
+#close-btn {
+  font-size: 3rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+}
+
+/* Navigare în sidebar */
+.sidebar nav a {
+  display: block;
+  color: #e0e7ff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+  margin-bottom: 6px;
+}
+.sidebar nav a:hover,
+.sidebar nav a:focus {
+  background-color: #3b82f6;
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+.sidebar nav a.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Buton special susține proiectul */
+.sidebar a.sustine-proiect {
+  background-color: #374151;
+  color: #f9fafb;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.6rem 0.8rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+.sidebar a.sustine-proiect:hover {
+  background-color: #1f2937;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<header>
+    <button id="menu-toggle" aria-label="Deschide meniul">☰</button>
+    <div class="header-text">
+        <span class="step-number">1.</span>Definirea genelor →
+        <span class="step-number">2.</span>Introducere părinți →
+        <span class="step-number">3.</span>Rezultate F₁ / F₂
+    </div>
+    <h1 class="app-title">Calculator Genetica Mendeliana🧬</h1>
+</header>
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>CalculatorGenetica</h2>
+        <button id="close-btn" aria-label="Închide meniul">×</button>
+    </div>
+    <nav>
+        <a th:href="@{/}">Calculator</a>
+        <a th:href="@{/learning-environment}">Mediu de Invatare</a>
+        <a th:href="@{/theory}">Teorie genetică</a>
+        <a th:href="@{/segregation-law}">Legea segregării</a>
+        <a th:href="@{/independent-assortment}">Asortare independentă</a>
+        <a th:href="@{/bac-exercises}">Exerciții BAC</a>
+        <a th:href="@{/contact}">Contact</a>
+        <a th:href="@{/faq}">Întrebări frecvente</a>
+        <a th:href="@{/terms}">Termeni și condiții</a>
+        <a th:href="@{/donate}" class="sustine-proiect">❤️ Susține proiectul</a>
+    </nav>
+</div>
+<br>
+<br>
+<h1>Chestionare Genetică</h1>
+<p>Alege un chestionar pentru a începe să exersezi</p>
+<main>
+    <div class="card-container" id="quizCards">
+        <div class="card" data-quiz="theory" tabindex="0" role="button" aria-pressed="false">
+            <h2>1. Teorie genetică</h2>
+            <p>Înțelege conceptele de bază ale geneticii</p>
+        </div>
+        <div class="card" data-quiz="mendel-laws" tabindex="0" role="button" aria-pressed="false">
+            <h2>2. Legile lui Mendel</h2>
+            <p>Exersează legile moștenirii caracterelor</p>
+        </div>
+        <div class="card" data-quiz="bac-exercises" tabindex="0" role="button" aria-pressed="false">
+            <h2>3. Exerciții Bac</h2>
+            <p>Pregătire pentru examenul de bacalaureat</p>
+        </div>
+        <div class="card" data-quiz="miscellaneous" tabindex="0" role="button" aria-pressed="false">
+            <h2>4. Chestionar divers</h2>
+            <p>Întrebări variate despre genetică</p>
+        </div>
+        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
+            <h2>5. Ghid complet</h2>
+            <p>Test de verificare a întregii materii</p>
+        </div>
+        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
+            <h2>5. Ghid complet</h2>
+            <p>Test de verificare a întregii materii</p>
+        </div>
+        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
+            <h2>5. Ghid complet</h2>
+            <p>Test de verificare a întregii materii</p>
+        </div>
+        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
+            <h2>5. Ghid complet</h2>
+            <p>Test de verificare a întregii materii</p>
+        </div>
+        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
+            <h2>5. Ghid complet</h2>
+            <p>Test de verificare a întregii materii</p>
+        </div>
+        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
+            <h2>5. Ghid complet</h2>
+            <p>Test de verificare a întregii materii</p>
+        </div>
+    </div>
+
+    <button id="randomBtn" aria-label="Începe chestionar aleatoriu">Începe chestionar aleatoriu</button>
+</main>
+
+<script>
+    const cards = document.querySelectorAll('.card');
+    const randomBtn = document.getElementById('randomBtn');
+
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const quiz = card.getAttribute('data-quiz');
+            window.location.href = `/quiz/${quiz}`;
+        });
+        card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+
+    randomBtn.addEventListener('click', () => {
+        const quizzes = ['theory', 'mendel-laws', 'bac-exercises', 'miscellaneous', 'complete-guide'];
+        const randomQuiz = quizzes[Math.floor(Math.random() * quizzes.length)];
+        window.location.href = `/quiz/${randomQuiz}`;
+    });
+
+const sidebar = document.getElementById("sidebar");
+const toggleBtn = document.getElementById("menu-toggle");
+const closeBtn = document.getElementById("close-btn");
+
+toggleBtn.addEventListener("click", () => {
+    sidebar.classList.add("show");
+});
+
+closeBtn.addEventListener("click", () => {
+    sidebar.classList.remove("show");
+});
+
+</script>
+
+</body>
+</html>

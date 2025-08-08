@@ -1,6 +1,7 @@
 package com.genetica.genetica_calc.Controller;
 
 import com.genetica.genetica_calc.Model.Caracter;
+import com.genetica.genetica_calc.Model.F2Result;
 import com.genetica.genetica_calc.Service.CalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,18 +83,26 @@ public class CalculatorController {
         String[][] resultsF1 = service.generatePunnettTable(gametesParent1, gametesParent2, caractere);
         List<Map<String, Object>> phenotypesF1 = service.calculatePhenotypes(resultsF1, caracter1, caracter2);
 
-        Set<String> gametesF1Set = new HashSet<>();
+        Set<String> uniqueF1Genotypes = new HashSet<>();
         for (String[] row : resultsF1) {
-            gametesF1Set.addAll(Arrays.asList(row));
+            uniqueF1Genotypes.addAll(Arrays.asList(row));
         }
-        List<String> gametesF1 = new ArrayList<>(gametesF1Set);
+        model.addAttribute("genotypesF1", uniqueF1Genotypes);
+        List<F2Result> allF2Results = new ArrayList<>();
+        for (String genotypeF1 : uniqueF1Genotypes) {
+            List<String> gametes = service.generateGametes(genotypeF1);
+            String[][] f2Table = service.generatePunnettTable(gametes, gametes, caractere);
+            List<Map<String, Object>> phenotypes = service.calculatePhenotypes(f2Table, caracter1, caracter2);
 
-        String[][] resultsF2 = service.generatePunnettTable(gametesF1, gametesF1, caractere);
-        List<Map<String, Object>> phenotypesF2 = service.calculatePhenotypes(resultsF2, caracter1, caracter2);
+            Map<String, List<String>> simpleClassification = service.classifyGenotypesSimple(f2Table, caractere);
+
+            allF2Results.add(new F2Result(genotypeF1, gametes, f2Table, phenotypes, simpleClassification));
+        }
 
 
-        model.addAttribute("resultsF2", resultsF2);
-        model.addAttribute("phenotypesF2", phenotypesF2);
+
+
+        model.addAttribute("allF2Results", allF2Results);
         model.addAttribute("genesDefined", true);
         model.addAttribute("caracter1", caracter1);
         model.addAttribute("caracter2", caracter2);
@@ -104,7 +113,7 @@ public class CalculatorController {
         model.addAttribute("gametes2", gametesParent2);
         model.addAttribute("resultsF1", resultsF1);
         model.addAttribute("phenotypesF1", phenotypesF1);
-        model.addAttribute("gametesF1", gametesF1);
+
 
         return "home";
     }

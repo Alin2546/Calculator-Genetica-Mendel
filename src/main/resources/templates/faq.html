@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Întrebări frecvente - Calculator Legile lui Mendel</title>
+  <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f9fbfd;
+        color: #2c3e50;
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem 3rem;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2.4rem;
+        font-weight: 900;
+        color: #004aad;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 6px rgba(0, 74, 173, 0.25);
+    }
+
+    .faq-item {
+        background: white;
+        border: 1px solid #d1d9e6;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .faq-item:hover {
+        background-color: #f0f6ff;
+    }
+
+    .faq-question {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #2a3f54;
+        position: relative;
+        padding-right: 25px;
+    }
+
+    .faq-question::after {
+        content: '+';
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 1.4rem;
+        color: #4a90e2;
+        transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-question::after {
+        content: '-';
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        margin-top: 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #34495e;
+        display: none;
+    }
+
+    .faq-item.active .faq-answer {
+        display: block;
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 0 1rem 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    /* Header fixat sus */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  background-color: #d1e4ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  z-index: 1200;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Buton toggle meniu */
+#menu-toggle {
+  background-color: transparent;
+  border: none;
+  color: #004aad;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+#menu-toggle:hover {
+  background-color: #a8c3ff;
+}
+
+/* Text header (pași / titlu) */
+.header-text {
+  padding: 0 1rem;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  color: #004aad;
+  font-weight: 900;
+  font-size: 1.4rem;
+  user-select: none;
+  align-items: center;
+}
+
+/* Titlu aplicație în header */
+.app-title {
+  margin-left: auto;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #007bff, #7c3aed, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Sidebar - partea laterală */
+.sidebar {
+  width: 250px;
+  background-color: #004aad;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  height: calc(100vh - 56px);
+  transform: translateX(-100%);
+  z-index: 1002;
+}
+
+/* Sidebar vizibil */
+.sidebar.show {
+  transform: translateX(0);
+}
+
+/* Header sidebar */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.sidebar-header h2 {
+  font-size: 1.5rem;
+}
+
+/* Buton închide sidebar */
+#close-btn {
+  font-size: 3rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+}
+
+/* Navigare în sidebar */
+.sidebar nav a {
+  display: block;
+  color: #e0e7ff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+  margin-bottom: 6px;
+}
+.sidebar nav a:hover,
+.sidebar nav a:focus {
+  background-color: #3b82f6;
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+.sidebar nav a.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Buton special susține proiectul */
+.sidebar a.sustine-proiect {
+  background-color: #374151;
+  color: #f9fafb;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.6rem 0.8rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+.sidebar a.sustine-proiect:hover {
+  background-color: #1f2937;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+
+  </style>
+</head>
+<body>
+<header>
+  <button id="menu-toggle" aria-label="Deschide meniul">☰</button>
+  <div class="header-text">
+    <span class="step-number">1.</span>Definirea genelor →
+    <span class="step-number">2.</span>Introducere părinți →
+    <span class="step-number">3.</span>Rezultate F₁ / F₂
+  </div>
+  <h1 class="app-title">Calculator Genetica Mendeliana🧬</h1>
+</header>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>CalculatorGenetica</h2>
+    <button id="close-btn" aria-label="Închide meniul">×</button>
+  </div>
+  <nav>
+    <a th:href="@{/}">Calculator</a>
+    <a th:href="@{/learning-environment}">Mediu de Invatare</a>
+    <a th:href="@{/theory}">Teorie genetică</a>
+    <a th:href="@{/segregation-law}">Legea segregării</a>
+    <a th:href="@{/independent-assortment}">Asortare independentă</a>
+    <a th:href="@{/bac-exercises}">Exerciții BAC</a>
+    <a th:href="@{/contact}">Contact</a>
+    <a th:href="@{/faq}">Întrebări frecvente</a>
+    <a th:href="@{/terms}">Termeni și condiții</a>
+    <a th:href="@{/donate}" class="sustine-proiect">❤️ Susține proiectul</a>
+  </nav>
+</div>
+<br>
+<br>
+<h1>Întrebări frecvente (FAQ)</h1>
+
+<div class="faq-item">
+  <div class="faq-question">1. Ce este Calculator Legile lui Mendel?</div>
+  <div class="faq-answer">
+    Calculator Legile lui Mendel este o aplicație educațională care ajută utilizatorii să înțeleagă principiile genetice mendeliene prin simulări și calcule interactive.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">2. Este aplicația gratuită?</div>
+  <div class="faq-answer">
+    Da, aplicația este complet gratuită. Acceptăm doar donații voluntare pentru a susține dezvoltarea și mentenanța platformei.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">3. Cum pot face o donație?</div>
+  <div class="faq-answer">
+    Pentru a face o donație, accesați pagina <a href="/donate">Susține proiectul</a> unde găsiți toate informațiile necesare.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">4. Datele mele personale sunt în siguranță?</div>
+  <div class="faq-answer">
+    Da, protejăm confidențialitatea datelor dvs. în conformitate cu Politica noastră de Confidențialitate. Nu partajăm datele cu terți fără consimțământul dvs.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">5. Pot folosi rezultatele calculelor pentru scopuri comerciale?</div>
+  <div class="faq-answer">
+    Nu. Conținutul și rezultatele oferite de aplicație sunt destinate exclusiv utilizării personale și educaționale, nu pentru scopuri comerciale.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">6. Care sunt legile lui Mendel pe care le folosesc simulările?</div>
+  <div class="faq-answer">
+    Simulările sunt bazate pe cele trei legi fundamentale ale lui Gregor Mendel: Legea segregării, Legea asortării independente și Legea dominanței.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">7. Pot salva rezultatele simulărilor mele?</div>
+  <div class="faq-answer">
+    Momentan nu există o funcționalitate de salvare directă, dar puteți copia manual rezultatele sau face capturi de ecran pentru referințe ulterioare.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">8. Aplicația funcționează și pe mobil?</div>
+  <div class="faq-answer">
+    Da, aplicația este responsivă și poate fi accesată de pe majoritatea dispozitivelor mobile și tablete.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">9. Cum pot raporta o eroare sau o sugestie?</div>
+  <div class="faq-answer">
+    Ne puteți contacta prin pagina de <a href="/contact">Contact</a> sau trimite un email la <a href="mailto:support@calculatorlegileluimendel.ro">support@calculatorlegileluimendel.ro</a>.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">10. Aplicația oferă suport pentru alte limbi?</div>
+  <div class="faq-answer">
+    În prezent, aplicația este disponibilă doar în limba română, dar lucrăm pentru extinderea suportului lingvistic.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">11. Cum este actualizată aplicația?</div>
+  <div class="faq-answer">
+    Aplicația este actualizată periodic pentru a corecta erori, a adăuga noi funcționalități și pentru a îmbunătăți experiența utilizatorului.
+  </div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-question">12. Pot contribui la dezvoltarea aplicației?</div>
+  <div class="faq-answer">
+    Dacă sunteți interesat să contribuiți, vă rugăm să ne contactați pentru a discuta modalitățile de colaborare.
+  </div>
+</div>
+
+<script>
+  // Script simplu pentru a face întrebările expandabile/collapsabile
+  document.querySelectorAll('.faq-item').forEach(item => {
+      item.addEventListener('click', () => {
+          item.classList.toggle('active');
+      });
+  });
+
+const sidebar = document.getElementById("sidebar");
+const toggleBtn = document.getElementById("menu-toggle");
+const closeBtn = document.getElementById("close-btn");
+
+toggleBtn.addEventListener("click", () => {
+    sidebar.classList.add("show");
+});
+
+closeBtn.addEventListener("click", () => {
+    sidebar.classList.remove("show");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Termeni și Condiții - Calculator Legile lui Mendel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fbfd;
+      color: #2c3e50;
+      margin: 2rem auto;
+      max-width: 720px;
+      padding: 0 1rem 3rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #004aad;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 0 6px rgba(0, 74, 173, 0.25);
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #2a3f54;
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 0.3rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.55;
+      color: #34495e;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      margin-left: 1.25rem;
+      margin-bottom: 1.5rem;
+      color: #4a5a72;
+    }
+
+    ul li {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+      outline: none;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 3rem 0 1.5rem;
+    }
+
+    .last-updated {
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+    }
+    /* Header fixat sus */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  background-color: #d1e4ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  z-index: 1200;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Buton toggle meniu */
+#menu-toggle {
+  background-color: transparent;
+  border: none;
+  color: #004aad;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+#menu-toggle:hover {
+  background-color: #a8c3ff;
+}
+
+/* Text header (pași / titlu) */
+.header-text {
+  padding: 0 1rem;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  color: #004aad;
+  font-weight: 900;
+  font-size: 1.4rem;
+  user-select: none;
+  align-items: center;
+}
+
+/* Titlu aplicație în header */
+.app-title {
+  margin-left: auto;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #007bff, #7c3aed, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Sidebar - partea laterală */
+.sidebar {
+  width: 250px;
+  background-color: #004aad;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  height: calc(100vh - 56px);
+  transform: translateX(-100%);
+  z-index: 1002;
+}
+
+/* Sidebar vizibil */
+.sidebar.show {
+  transform: translateX(0);
+}
+
+/* Header sidebar */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.sidebar-header h2 {
+  font-size: 1.5rem;
+}
+
+/* Buton închide sidebar */
+#close-btn {
+  font-size: 3rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+}
+
+/* Navigare în sidebar */
+.sidebar nav a {
+  display: block;
+  color: #e0e7ff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+  margin-bottom: 6px;
+}
+.sidebar nav a:hover,
+.sidebar nav a:focus {
+  background-color: #3b82f6;
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+.sidebar nav a.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Buton special susține proiectul */
+.sidebar a.sustine-proiect {
+  background-color: #374151;
+  color: #f9fafb;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.6rem 0.8rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+.sidebar a.sustine-proiect:hover {
+  background-color: #1f2937;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+
+  </style>
+</head>
+<body>
+<header>
+  <button id="menu-toggle" aria-label="Deschide meniul">☰</button>
+  <div class="header-text">
+    <span class="step-number">1.</span>Definirea genelor →
+    <span class="step-number">2.</span>Introducere părinți →
+    <span class="step-number">3.</span>Rezultate F₁ / F₂
+  </div>
+  <h1 class="app-title">Calculator Genetica Mendeliana🧬</h1>
+</header>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>CalculatorGenetica</h2>
+    <button id="close-btn" aria-label="Închide meniul">×</button>
+  </div>
+  <nav>
+    <a th:href="@{/}">Calculator</a>
+    <a th:href="@{/learning-environment}">Mediu de Invatare</a>
+    <a th:href="@{/theory}">Teorie genetică</a>
+    <a th:href="@{/segregation-law}">Legea segregării</a>
+    <a th:href="@{/independent-assortment}">Asortare independentă</a>
+    <a th:href="@{/bac-exercises}">Exerciții BAC</a>
+    <a th:href="@{/contact}">Contact</a>
+    <a th:href="@{/faq}">Întrebări frecvente</a>
+    <a th:href="@{/terms}">Termeni și condiții</a>
+    <a th:href="@{/donate}" class="sustine-proiect">❤️ Susține proiectul</a>
+  </nav>
+</div>
+<br>
+<br>
+<h1>Termeni și Condiții de Utilizare</h1>
+
+<h2>1. Introducere</h2>
+<p>
+  Bine ați venit pe platforma <strong>Calculator Legile lui Mendel</strong> (denumită în continuare „Aplicația”).
+  Prin accesarea și utilizarea acestei Aplicații, confirmați că ați citit, înțeles și acceptat termenii și condițiile descrise în acest document.
+  Vă rugăm să citiți cu atenție acești termeni înainte de a utiliza serviciile noastre.
+</p>
+<p>
+  Dacă nu sunteți de acord cu oricare dintre prevederile acestor termeni, vă rugăm să nu utilizați Aplicația.
+</p>
+
+<h2>2. Obiectul Aplicației</h2>
+<p>
+  Aplicația oferă un instrument educațional interactiv pentru efectuarea de simulări și calcule genetice bazate pe legile lui Mendel.
+  Scopul principal este de a sprijini elevii, studenții și pasionații de genetică în înțelegerea conceptelor genetice mendeliene prin exerciții practice și exemple.
+</p>
+<p>
+  Toate informațiile și rezultatele generate sunt doar pentru uz educațional și nu pot înlocui consultanța unui specialist în genetică.
+</p>
+
+<h2>3. Donații</h2>
+<p>
+  Calculator Legile lui Mendel este oferit gratuit tuturor utilizatorilor.
+  Pentru a susține dezvoltarea continuă, îmbunătățirea funcționalităților și menținerea serverelor, <strong>acceptăm donații voluntare</strong>.
+</p>
+<ul>
+  <li>Donațiile sunt complet opționale și nu sunt necesare pentru utilizarea Aplicației.</li>
+  <li>Nu oferim beneficii suplimentare, acces prioritar sau funcționalități exclusive pentru donatori.</li>
+  <li>Toate donațiile sunt folosite exclusiv pentru acoperirea costurilor legate de dezvoltare și infrastructură.</li>
+  <li>Nu există niciun angajament din partea noastră față de donatori în afara folosirii corecte a fondurilor.</li>
+</ul>
+
+<h2>4. Utilizarea conținutului</h2>
+<p>
+  Toate calculele, simulările, textele, imaginile și alte materiale puse la dispoziție prin intermediul Aplicației sunt destinate exclusiv pentru uz personal și educațional.
+</p>
+<p>
+  Este interzisă reproducerea, distribuirea sau utilizarea comercială a conținutului fără acordul scris prealabil al proprietarilor Aplicației.
+</p>
+
+<h2>5. Responsabilități</h2>
+<p>
+  Aplicația este oferită „așa cum este”, fără garanții explicite sau implicite privind acuratețea sau rezultatele.
+</p>
+<p>
+  Utilizatorii înțeleg și acceptă că folosirea rezultatelor din simulări se face pe propria răspundere.
+  Dezvoltatorii Aplicației nu pot fi trași la răspundere pentru decizii sau acțiuni bazate pe rezultatele oferite.
+</p>
+
+<h2>6. Protecția datelor personale</h2>
+<p>
+  Orice date personale colectate în legătură cu utilizarea Aplicației sunt gestionate în conformitate cu <a href="/politica-de-confidentialitate">Politica noastră de Confidențialitate</a>.
+</p>
+<p>
+  Ne angajăm să respectăm confidențialitatea și să protejăm datele utilizatorilor conform legislației aplicabile.
+</p>
+
+<h2>7. Modificări ale termenilor</h2>
+<p>
+  Ne rezervăm dreptul de a modifica sau actualiza acești termeni în orice moment, fără notificare prealabilă.
+</p>
+<p>
+  Utilizarea continuă a Aplicației după publicarea modificărilor reprezintă acceptarea tacită a noilor condiții.
+  Vă recomandăm să verificați periodic această pagină pentru a fi la curent cu eventualele actualizări.
+</p>
+
+<h2>8. Contact</h2>
+<p>
+  Pentru întrebări, sugestii sau nelămuriri legate de acești termeni și condiții, vă rugăm să ne contactați la:
+  <a href="mailto:support@calculatorlegileluimendel.ro">support@calculatorlegileluimendel.ro</a>.
+</p>
+
+<hr />
+<p class="last-updated">
+  Ultima actualizare: 3 august 2025
+</p>
+<script>
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("menu-toggle");
+  const closeBtn = document.getElementById("close-btn");
+
+  toggleBtn.addEventListener("click", () => {
+      sidebar.classList.add("show");
+  });
+
+  closeBtn.addEventListener("click", () => {
+      sidebar.classList.remove("show");
+  });
+</script>
+</body>
+</html>

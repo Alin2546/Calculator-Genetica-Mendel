@@ -140,4 +140,45 @@ public class CalculatorService {
 
         return sb.toString();
     }
+    public Map<String, List<String>> classifyGenotypesSimple(String[][] table, List<Caracter> caractere) {
+        Map<String, List<String>> classification = new HashMap<>();
+        classification.put("dublu_homozigot", new ArrayList<>());
+        classification.put("dublu_heterozigot", new ArrayList<>());
+
+        Set<String> processed = new HashSet<>();
+
+        for (String[] row : table) {
+            for (String genotype : row) {
+                if (processed.contains(genotype)) continue;
+                processed.add(genotype);
+
+                boolean allHomo = true;
+                boolean allHetero = true;
+
+                for (Caracter c : caractere) {
+                    char dom = c.getDominant();
+                    char rec = c.getRecessive();
+
+                    long domCount = genotype.chars().filter(ch -> ch == dom).count();
+                    long recCount = genotype.chars().filter(ch -> ch == rec).count();
+
+                    if (!((domCount == 2) || (recCount == 2))) {
+                        allHomo = false;
+                    }
+
+                    if (!(domCount == 1 && recCount == 1)) {
+                        allHetero = false;
+                    }
+                }
+
+                if (allHomo) {
+                    classification.get("dublu_homozigot").add(genotype);
+                } else if (allHetero) {
+                    classification.get("dublu_heterozigot").add(genotype);
+                }
+            }
+        }
+
+        return classification;
+    }
 }
