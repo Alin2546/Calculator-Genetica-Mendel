@@ -2,22 +2,31 @@ package com.genetica.genetica_calc.Controller;
 
 import com.genetica.genetica_calc.Model.Caracter;
 import com.genetica.genetica_calc.Model.F2Result;
+import com.genetica.genetica_calc.Model.OpenAI.GeneticsRequest;
+import com.genetica.genetica_calc.Model.OpenAI.GeneticsResponse;
 import com.genetica.genetica_calc.Service.CalculatorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.genetica.genetica_calc.Service.OpenAIService;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
 @Controller
+
+@RequiredArgsConstructor
 public class CalculatorController {
-    @Autowired
-    private CalculatorService service;
+
+    private final CalculatorService calculatorService;
+    private final OpenAIService openAIService;
 
     private Caracter caracter1;
     private Caracter caracter2;
+
 
     @PostMapping("/define-genes")
     public String defineGenes(
@@ -49,7 +58,7 @@ public class CalculatorController {
         model.addAttribute("recessive2Desc", recessive2Desc);
 
         model.addAttribute("genesDefined", true);
-        return "home";
+        return "calculator";
     }
 
     @PostMapping("/define-parents")
@@ -75,13 +84,13 @@ public class CalculatorController {
             model.addAttribute("genesDefined", true);
             model.addAttribute("caracter1", caracter1);
             model.addAttribute("caracter2", caracter2);
-            return "home";
+            return "calculator";
         }
-        List<String> gametesParent1 = service.generateGametes(parent1);
-        List<String> gametesParent2 = service.generateGametes(parent2);
+        List<String> gametesParent1 = calculatorService.generateGametes(parent1);
+        List<String> gametesParent2 = calculatorService.generateGametes(parent2);
 
-        String[][] resultsF1 = service.generatePunnettTable(gametesParent1, gametesParent2, caractere);
-        List<Map<String, Object>> phenotypesF1 = service.calculatePhenotypes(resultsF1, caracter1, caracter2);
+        String[][] resultsF1 = calculatorService.generatePunnettTable(gametesParent1, gametesParent2, caractere);
+        List<Map<String, Object>> phenotypesF1 = calculatorService.calculatePhenotypes(resultsF1, caracter1, caracter2);
 
         Set<String> uniqueF1Genotypes = new HashSet<>();
         for (String[] row : resultsF1) {
@@ -90,11 +99,11 @@ public class CalculatorController {
         model.addAttribute("genotypesF1", uniqueF1Genotypes);
         List<F2Result> allF2Results = new ArrayList<>();
         for (String genotypeF1 : uniqueF1Genotypes) {
-            List<String> gametes = service.generateGametes(genotypeF1);
-            String[][] f2Table = service.generatePunnettTable(gametes, gametes, caractere);
-            List<Map<String, Object>> phenotypes = service.calculatePhenotypes(f2Table, caracter1, caracter2);
+            List<String> gametes = calculatorService.generateGametes(genotypeF1);
+            String[][] f2Table = calculatorService.generatePunnettTable(gametes, gametes, caractere);
+            List<Map<String, Object>> phenotypes = calculatorService.calculatePhenotypes(f2Table, caracter1, caracter2);
 
-            Map<String, List<String>> simpleClassification = service.classifyGenotypesSimple(f2Table, caractere);
+            Map<String, List<String>> simpleClassification = calculatorService.classifyGenotypesSimple(f2Table, caractere);
 
             allF2Results.add(new F2Result(genotypeF1, gametes, f2Table, phenotypes, simpleClassification));
         }
@@ -115,7 +124,20 @@ public class CalculatorController {
         model.addAttribute("phenotypesF1", phenotypesF1);
 
 
-        return "home";
+        return "calculator";
+    }
+
+    @PostMapping("/solve")
+    public String solveProblem(@ModelAttribute GeneticsRequest request, Model model) {
+        try {
+            GeneticsResponse response = openAIService.analyzeGenetics(request.getProblemStatement());
+            model.addAttribute("aiResult", response); //
+            model.addAttribute("problemStatement", request.getProblemStatement());
+        } catch (Exception e) {
+            model.addAttribute("error", "A apărut o eroare la procesarea problemei: " + e.getMessage());
+        }
+        model.addAttribute("genesDefined", true);
+        return "calculator";
     }
 }
 

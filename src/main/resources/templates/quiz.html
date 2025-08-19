@@ -67,27 +67,51 @@
       gap: 1rem;
     }
 
-    label {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      background: #f2f2f2;
-      border-radius: 10px;
-      padding: 1rem 1.5rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #222;
-      user-select: none;
-      border: 2px solid transparent;
-      transition: border-color 0.2s ease;
-    }
-    label:hover {
-      border-color: #888;
-    }
+   label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: #f2f2f2;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #222;
+  user-select: none;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
 
-    input[type="radio"] {
-      display: none;
-    }
+/* Hover */
+label:hover {
+  border-color: #339af0;
+}
+
+/* Când este selectat */
+input[type="radio"]:checked + .option-letter {
+  background: #1c7ed6; /* albastru mai închis */
+}
+
+/* Evidențiere pe tot label-ul */
+input[type="radio"]:checked + .option-letter + span,
+input[type="radio"]:checked + .option-letter {
+  color: white;
+}
+
+input[type="radio"]:checked ~ span {
+  color: white;
+}
+
+input[type="radio"]:checked:checked + .option-letter,
+input[type="radio"]:checked:checked ~ span {
+  background: #1c7ed6;
+}
+
+label:has(input[type="radio"]:checked) {
+  background: #339af0;   /* fundal albastru */
+  color: white;
+  border-color: #1c7ed6; /* margine mai închisă */
+}
 
     .option-letter {
       width: 36px;
@@ -195,90 +219,119 @@
 </header>
 
 <main>
+
   <form th:action="@{/quiz/submit}" method="post" id="quizForm" novalidate>
     <input type="hidden" name="quizName" th:value="${quizName}" />
+    <input type="hidden" id="totalQuestionsField" name="totalQuestions" />
+    <input type="hidden" id="correctAnswersField" name="correctAnswers" />
+    <input type="hidden" id="wrongAnswersField" name="wrongAnswers" />
 
-    <p class="question-text" th:text="${questions[0].text}">Întrebarea 1</p>
-
-    <div class="options">
-      <label>
-        <input type="radio" name="answer0" value="A" required />
-        <span class="option-letter">A</span>
-        <span th:text="${questions[0].optionA}">Varianta A</span>
-      </label>
-      <label>
-        <input type="radio" name="answer0" value="B" />
-        <span class="option-letter">B</span>
-        <span th:text="${questions[0].optionB}">Varianta B</span>
-      </label>
-      <label>
-        <input type="radio" name="answer0" value="C" />
-        <span class="option-letter">C</span>
-        <span th:text="${questions[0].optionC}">Varianta C</span>
-      </label>
-    </div>
+    <p class="question-text">Întrebarea 1</p>
+    <div class="options"></div>
   </form>
 </main>
 
 <footer>
   <button id="laterBtn" type="button">Răspunde mai târziu</button>
-  <button id="submitBtn" type="submit" form="quizForm" disabled>Trimite răspunsul</button>
+  <button id="submitBtn" type="button">Trimite răspunsul</button>
 </footer>
 
-<script>
-  // Variabile demo (în realitate iau date din backend / JS)
-  const totalQuestions = /*[[${#lists.size(questions)}]]*/ 25;
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  const questions = /*[[${questions}]]*/ [];
+  const quizName = /*[[${quizName}]]*/ "";
+
+  let currentQuestionIndex = 0;
   let correctAnswers = 0;
   let wrongAnswers = 0;
-  let currentQuestionIndex = 0;
 
-  const totalQuestionsEl = document.getElementById('totalQuestions');
+  const questionTextEl = document.querySelector(".question-text");
+  const optionsEl = document.querySelector(".options");
   const questionsLeftEl = document.getElementById('questionsLeft');
   const correctAnswersEl = document.getElementById('correctAnswers');
   const wrongAnswersEl = document.getElementById('wrongAnswers');
-  const timeRemainingEl = document.getElementById('timeRemaining');
   const submitBtn = document.getElementById('submitBtn');
-  const laterBtn = document.getElementById('laterBtn');
-  const form = document.getElementById('quizForm');
 
-  totalQuestionsEl.textContent = totalQuestions;
-  questionsLeftEl.textContent = totalQuestions;
+  const totalQuestionsField = document.getElementById("totalQuestionsField");
+  const correctAnswersField = document.getElementById("correctAnswersField");
+  const wrongAnswersField = document.getElementById("wrongAnswersField");
 
-  // Timer simplu 10 minute
-  let timeLeft = 600; // secunde
+  let timeLeft = 600;
+  const timeRemainingEl = document.getElementById("timeRemaining");
+
   function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   }
 
   function countdown() {
-    if(timeLeft > 0){
+    if (timeLeft > 0) {
       timeLeft--;
       timeRemainingEl.textContent = formatTime(timeLeft);
     } else {
-      // Timpul a expirat
       alert('Timpul pentru chestionar a expirat!');
-      submitBtn.click(); // trimite automat
+      finalizeQuiz();
     }
   }
   setInterval(countdown, 1000);
 
-  // Activează butonul Trimite dacă s-a selectat o opțiune
-  form.addEventListener('change', () => {
-    const answered = form.querySelectorAll('input[type="radio"]:checked').length;
-    submitBtn.disabled = answered === 0;
-  });
+  function loadQuestion(index) {
+    const q = questions[index];
+    questionTextEl.textContent = q.text;
+    optionsEl.innerHTML = `
+      <label>
+        <input type="radio" name="answer" value="A" />
+        <span class="option-letter">A</span>
+        <span>${q.optionA}</span>
+      </label>
+      <label>
+        <input type="radio" name="answer" value="B" />
+        <span class="option-letter">B</span>
+        <span>${q.optionB}</span>
+      </label>
+      <label>
+        <input type="radio" name="answer" value="C" />
+        <span class="option-letter">C</span>
+        <span>${q.optionC}</span>
+      </label>
+    `;
+    questionsLeftEl.textContent = questions.length - currentQuestionIndex;
+  }
 
-  // Buton răspunde mai târziu - simplu exemplu alert
-  laterBtn.addEventListener('click', () => {
-    alert('Poți reveni mai târziu să răspunzi la această întrebare.');
-  });
+  function finalizeQuiz() {
+    // completăm hidden inputs
+    totalQuestionsField.value = questions.length;
+    correctAnswersField.value = correctAnswers;
+    wrongAnswersField.value = wrongAnswers;
 
-  // Pentru update răspunsuri corecte / greșite și întrebări rămase
-  // aici ar trebui să ai logica de evaluare și navigare între întrebări
-  // demo:
-  // la submit poți procesa răspunsul și apoi afișa următoarea întrebare
+
+    document.getElementById("quizForm").submit();
+  }
+
+  submitBtn.addEventListener('click', () => {
+    const selected = optionsEl.querySelector('input[type="radio"]:checked');
+    if (!selected) return;
+
+    const answer = selected.value;
+    const correct = questions[currentQuestionIndex].correctOption;
+
+    if (answer === correct) correctAnswers++;
+    else wrongAnswers++;
+
+    correctAnswersEl.textContent = correctAnswers;
+    wrongAnswersEl.textContent = wrongAnswers;
+
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < questions.length) {
+      loadQuestion(currentQuestionIndex);
+    } else {
+      finalizeQuiz();
+    }
+  });
+  loadQuestion(currentQuestionIndex);
+  /*]]>*/
 </script>
 
 </body>

@@ -1,6 +1,6 @@
 🧬 CalculatorGeneticaMendel 🧬 - Interactive app for simulating Mendelian genetics
 
-🌐 [Youtube presentation for CalculatorGeneticaMendel](https://www.youtube.com/watch?v=8v7vW4NLC3g&t=1s)
+🌐 [Youtube presentation for CalculatorGeneticaMendel](https://youtu.be/KZdOgQhQRsE)
 
 CalculatorGeneticaMendel is an interactive web app that helps users simulate Mendelian genetic crosses, generate Punnett squares, and calculate offspring genotype and phenotype probabilities. It’s designed for students and educators to easily explore classic inheritance patterns.
 

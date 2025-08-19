@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -297,7 +297,29 @@
   }
 }
 
+.success-message {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px 25px;
+    background: linear-gradient(90deg, #4caf50, #81c784);
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    animation: fadeIn 0.6s ease;
+}
 
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
   </style>
 </head>
@@ -334,21 +356,33 @@
 <main class="content">
 <h1>Contactează-ne</h1>
 
-<form th:action="@{/contact/send}" method="post">
-  <label for="name">Nume:</label>
-  <input type="text" id="name" name="name" placeholder="Numele tău" required />
+  <div th:if="${param.success}" class="success-message">
+    Mesajul tău a fost trimis cu succes!
+    <br>
+    Un operator vă va contacta cât mai curând posibil!
+  </div>
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" placeholder="Adresa ta de email" required />
+  <form th:action="@{/contact/send}" th:object="${contactMessageDTO}" method="post" novalidate>
+    <label for="name">Nume:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="Numele tău" required />
+    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-  <label for="subject">Subiect:</label>
-  <input type="text" id="subject" name="subject" placeholder="Subiectul mesajului" required />
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" placeholder="Adresa ta de email" required />
+    <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 
-  <label for="message">Mesaj:</label>
-  <textarea id="message" name="message" rows="5" placeholder="Scrie mesajul tău aici..." required></textarea>
+    <label for="subject">Subiect:</label>
+    <input type="text" id="subject" th:field="*{subject}" placeholder="Subiectul mesajului" required />
+    <div class="error" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></div>
 
-  <button type="submit">Trimite</button>
-</form>
+    <label for="message">Mesaj:</label>
+    <textarea id="message" th:field="*{message}" rows="5" placeholder="Scrie mesajul tău aici..." required></textarea>
+    <div class="error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
+
+    <button type="submit">Trimite</button>
+  </form>
+
+
 
 <div class="contact-info">
   <p>Ne poți contacta și prin email direct: <a href="mailto:support@calculatorlegileluimendel.ro">support@calculatorlegileluimendel.ro</a></p>

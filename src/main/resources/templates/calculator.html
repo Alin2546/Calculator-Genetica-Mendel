@@ -150,7 +150,7 @@
           }
 
 
-          /* Responsive */
+
           @media (max-width: 640px) {
               form {
                   grid-template-columns: 1fr;
@@ -368,6 +368,26 @@
     </nav>
 </div>
 <div class="container">
+
+    <div class="section">
+        <h2>Analiză automată cu AI</h2>
+        <p>Introdu enunțul problemei genetice, iar AI-ul va extrage alelele și genotipurile părinților:</p>
+        <form method="post" th:action="@{/solve}" style="display: flex; flex-direction: column; gap: 12px;">
+        <textarea name="problemStatement" rows="4" placeholder="Se încrucişează un păr viguros (v), cu fructe asimetrice (A), fiind heterozigot pentru forma
+fructelor, cu un păr de vigoare slabă (V) și fructe sferice (a), fiind homozigot pentru ambele caractere.
+În F1 se obțin mai multe combinații de factori ereditari."
+                  style="padding: 10px; border-radius: 6px; border: 1.7px solid #cbd2d9; width: 100%;" required
+                  th:text="${problemStatement}"></textarea>
+            <button type="submit" style="max-width: 220px; justify-self: start; margin-top: 8px;">Analizează cu AI</button>
+        </form>
+
+        <div class="results-section" th:if="${aiResult}">
+            <h3>Rezultatul AI</h3>
+            <p><strong>Alele:</strong> <span th:text="${aiResult.alleles}"></span></p>
+            <p><strong>Genotip părinte 1:</strong> <span th:text="${aiResult.fatherGenotype}"></span></p>
+            <p><strong>Genotip părinte 2:</strong> <span th:text="${aiResult.motherGenotype}"></span></p>
+        </div>
+    </div>
 
 <div class="section">
     <h2>1. Definirea genelor și caracterelor</h2>

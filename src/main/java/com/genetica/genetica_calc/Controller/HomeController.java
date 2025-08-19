@@ -1,10 +1,19 @@
 package com.genetica.genetica_calc.Controller;
 
+import com.genetica.genetica_calc.Model.DTO.ContactMessageDTO;
+import com.genetica.genetica_calc.Repository.QuizQuestionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
+
+    private final QuizQuestionRepository quizQuestionRepository;
 
     @GetMapping()
     public String calculator() {
@@ -32,12 +41,15 @@ public class HomeController {
     }
 
     @GetMapping("/learning-environment")
-    public String learningEnvironment() {
+    public String learningEnvironment(Model model) {
+        List<String> categories = quizQuestionRepository.findDistinctCategories();
+        model.addAttribute("categories", categories);
         return "learningEnvironment";
     }
 
     @GetMapping("/contact")
-    public String contact() {
+    public String contact(Model model) {
+        model.addAttribute("contactMessageDTO", new ContactMessageDTO());
         return "contact";
     }
 
@@ -54,6 +66,16 @@ public class HomeController {
     @GetMapping("/donate")
     public String donate() {
         return "donate";
+    }
+
+    @GetMapping("/donation/success")
+    public String donationSuccess() {
+        return "donationSuccess";
+    }
+
+    @GetMapping("/donation/cancel")
+    public String donationCancel() {
+        return "donationCancel";
     }
 
 }

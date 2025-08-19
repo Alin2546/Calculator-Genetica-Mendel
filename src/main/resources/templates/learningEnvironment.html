@@ -307,92 +307,63 @@ button#randomBtn:focus {
     </nav>
 </div>
 
-
-
 <main class="content">
     <h1>Chestionare Genetică</h1>
     <p>Alege un chestionar pentru a începe să exersezi</p>
     <div class="card-container" id="quizCards">
-        <div class="card" data-quiz="theory" tabindex="0" role="button" aria-pressed="false">
-            <h2>1. Teorie genetică</h2>
-            <p>Înțelege conceptele de bază ale geneticii</p>
-        </div>
-        <div class="card" data-quiz="mendel-laws" tabindex="0" role="button" aria-pressed="false">
-            <h2>2. Legile lui Mendel</h2>
-            <p>Exersează legile moștenirii caracterelor</p>
-        </div>
-        <div class="card" data-quiz="bac-exercises" tabindex="0" role="button" aria-pressed="false">
-            <h2>3. Exerciții Bac</h2>
-            <p>Pregătire pentru examenul de bacalaureat</p>
-        </div>
-        <div class="card" data-quiz="miscellaneous" tabindex="0" role="button" aria-pressed="false">
-            <h2>4. Chestionar divers</h2>
-            <p>Întrebări variate despre genetică</p>
-        </div>
-        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
-            <h2>5. Ghid complet</h2>
-            <p>Test de verificare a întregii materii</p>
-        </div>
-        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
-            <h2>5. Ghid complet</h2>
-            <p>Test de verificare a întregii materii</p>
-        </div>
-        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
-            <h2>5. Ghid complet</h2>
-            <p>Test de verificare a întregii materii</p>
-        </div>
-        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
-            <h2>5. Ghid complet</h2>
-            <p>Test de verificare a întregii materii</p>
-        </div>
-        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
-            <h2>5. Ghid complet</h2>
-            <p>Test de verificare a întregii materii</p>
-        </div>
-        <div class="card" data-quiz="complete-guide" tabindex="0" role="button" aria-pressed="false">
-            <h2>5. Ghid complet</h2>
-            <p>Test de verificare a întregii materii</p>
+        <div class="card" th:each="category, iterStat : ${categories}"
+             th:attr="data-quiz=${category}"
+             tabindex="0" role="button" aria-pressed="false">
+            <h2>
+                <span th:text="${iterStat.count}">1</span>.
+                <span th:text="${category}">Nume categorie</span>
+            </h2>
+            <p th:text="'Test de exersare pentru categoria ' + ${category}">
+                Descriere categorie
+            </p>
         </div>
     </div>
 
-    <button id="randomBtn" aria-label="Începe chestionar aleatoriu">Începe chestionar aleatoriu</button>
+    <button id="randomBtn" aria-label="Începe chestionar aleatoriu">
+        Începe chestionar aleatoriu
+    </button>
 </main>
+
 
 <script>
     const cards = document.querySelectorAll('.card');
-    const randomBtn = document.getElementById('randomBtn');
 
     cards.forEach(card => {
         card.addEventListener('click', () => {
             const quiz = card.getAttribute('data-quiz');
             window.location.href = `/quiz/${quiz}`;
         });
-        card.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                card.click();
-            }
-        });
     });
 
-    randomBtn.addEventListener('click', () => {
-        const quizzes = ['theory', 'mendel-laws', 'bac-exercises', 'miscellaneous', 'complete-guide'];
-        const randomQuiz = quizzes[Math.floor(Math.random() * quizzes.length)];
-        window.location.href = `/quiz/${randomQuiz}`;
+ const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("menu-toggle");
+    const closeBtn = document.getElementById("close-btn");
+
+    toggleBtn.addEventListener("click", () => {
+        sidebar.classList.add("show");
     });
 
-const sidebar = document.getElementById("sidebar");
-const toggleBtn = document.getElementById("menu-toggle");
-const closeBtn = document.getElementById("close-btn");
+    closeBtn.addEventListener("click", () => {
+        sidebar.classList.remove("show");
+    });
 
-toggleBtn.addEventListener("click", () => {
-    sidebar.classList.add("show");
+    const randomBtn = document.getElementById('randomBtn');
+
+randomBtn.addEventListener('click', () => {
+    const cardsArray = Array.from(document.querySelectorAll('.card'));
+    if(cardsArray.length === 0) return; // Nu există carduri
+    const randomIndex = Math.floor(Math.random() * cardsArray.length);
+    const randomCard = cardsArray[randomIndex];
+    const quiz = randomCard.getAttribute('data-quiz');
+    if(quiz) {
+        window.location.href = `/quiz/${quiz}`;
+    }
 });
-
-closeBtn.addEventListener("click", () => {
-    sidebar.classList.remove("show");
-});
-
 </script>
 
 </body>

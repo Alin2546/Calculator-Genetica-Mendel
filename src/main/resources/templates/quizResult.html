@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Rezultat Chestionar</title>
+    <style>
+        body {
+          font-family: sans-serif;
+          background: #f9f9f9;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+        }
+        .result-box {
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          text-align: center;
+          max-width: 420px;
+        }
+        h1 {
+          margin-bottom: 1rem;
+          font-size: 1.6rem;
+          color: #111;
+        }
+        p {
+          margin: 0.5rem 0;
+          font-size: 1.1rem;
+          color: #444;
+        }
+        .score {
+          font-size: 1.3rem;
+          font-weight: bold;
+          margin-top: 1rem;
+          color: #222;
+        }
+        .rating {
+          margin-top: 1.2rem;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #2a7;
+        }
+        .back-btn {
+          margin-top: 1.5rem;
+          display: inline-block;
+          padding: 0.7rem 1.6rem;
+          background: #222;
+          color: white;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: bold;
+          transition: background 0.3s ease;
+        }
+        .back-btn:hover {
+          background: #000;
+        }
+    </style>
+</head>
+<body>
+<div class="result-box">
+    <h1 th:text="'Rezultatul pentru ' + ${quizName}"></h1>
+
+    <p>Total întrebări: <span th:text="${totalQuestions}"></span></p>
+    <p>Răspunsuri corecte: <span th:text="${correctAnswers}"></span></p>
+    <p>Răspunsuri greșite: <span th:text="${wrongAnswers}"></span></p>
+
+    <div class="score">
+        Scor final: <span th:text="${correctAnswers}"></span>/<span th:text="${totalQuestions}"></span>
+    </div>
+
+
+    <div class="rating">
+        <span th:if="${(correctAnswers * 100 / totalQuestions) >= 85}">⭐ Excelent! Bravo!</span>
+        <span th:if="${(correctAnswers * 100 / totalQuestions) >= 60 and (correctAnswers * 100 / totalQuestions) < 85}">👌 Foarte bine!</span>
+        <span th:if="${(correctAnswers * 100 / totalQuestions) >= 40 and (correctAnswers * 100 / totalQuestions) < 60}">🙂 Destul de bine, dar mai ai de lucrat.</span>
+        <span th:if="${(correctAnswers * 100 / totalQuestions) < 40}">😅 Mai încearcă, poți mai mult!</span>
+    </div>
+
+
+
+    <a href="/learning-environment" class="back-btn">Înapoi la mediul de învățare</a>
+</div>
+</body>
+</html>
